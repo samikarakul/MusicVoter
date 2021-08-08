@@ -1,10 +1,10 @@
 <template>
     <div>
-        <div v-for="music in $store.state.musics" :key="music.musicId" class="musics">
+        <div v-for="music in $store.state.musicsAndVotes" :key="music.musicId" class="musics">
             <Music :music="music" class="music"/>
             <div class="musicVoteAndButtons">
                 <MusicUpVoteButton :musicId="music.musicId"/>
-                 <MusicTotalVote :musicId="music.musicId" class="musicTotalVote_music"/>
+                <MusicTotalVote :musicId="music.musicId" :totalVote="music.totalVote" class="musicTotalVote_music"/>
                 <MusicDownVoteButton :musicId="music.musicId"/>
 
             </div>

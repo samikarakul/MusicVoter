@@ -1,6 +1,6 @@
 <template>
 <div>
-    <p>{{music.musicName}}</p>
+    <p><b>{{music.musicName}}</b></p>
     <p>{{music.performerName}}</p>
 </div>
 </template>

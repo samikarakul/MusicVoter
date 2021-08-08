@@ -4,6 +4,7 @@ export default createStore({
   state: {
     musics: [],
     musicTotalVotes: [],
+    musicsAndVotes: [],
     tmp: "temp veri"
   },
   mutations: {
@@ -12,17 +13,34 @@ export default createStore({
     },
     fetchTotalMusicVotes(state, data){
       state.musicTotalVotes = data
+      for(var i=0; i<state.musicTotalVotes.length; i++)
+      {
+        var d = state.musics[i]
+        d['totalVote'] = state.musicTotalVotes[i].totalVote
+        state.musicsAndVotes.push(d)
+      }
+
+      this.commit('controlSort')
     },
     upVoteMusicVote(state, musicId){
-      state.musicTotalVotes[musicId].totalVote += 1
+      state.musicTotalVotes.map((musicVote) => musicVote.musicId == musicId ? musicVote.totalVote += 1 :  musicVote.totalVote = musicVote.totalVote)
+      state.musicsAndVotes.map((musicAndVote) => musicAndVote.musicId == musicId ? musicAndVote.totalVote += 1 :  musicAndVote.totalVote = musicAndVote.totalVote)
+      this.commit('controlSort')
     },
     downVoteMusicVote(state, musicId){
-      state.musicTotalVotes[musicId].totalVote -= 1
+      state.musicTotalVotes.map((musicVote) => musicVote.musicId == musicId ? musicVote.totalVote -= 1 :  musicVote.totalVote = musicVote.totalVote)
+      state.musicsAndVotes.map((musicAndVote) => musicAndVote.musicId == musicId ? musicAndVote.totalVote -= 1 :  musicAndVote.totalVote = musicAndVote.totalVote)
 
+      this.commit('controlSort')
+
+    },
+    controlSort(state){
+      state.musicsAndVotes.sort((a,b) => b.totalVote - a.totalVote)
     },
     changeTmp(state, val){
       state.tmp = val
     }
+
 
   },
   actions: {
@@ -31,17 +49,19 @@ export default createStore({
         .then(res => res.json())
         .then(data => {
           commit('fetchMusics', data)
+          dispatch('fetchTotalMusicVotes')
         })
-      dispatch('fetchTotalMusicVotes')
     },
     fetchTotalMusicVotes({commit}){
       fetch('https://localhost:5001/api/musictotalvote')
         .then(res => res.json())
-        .then(data => commit('fetchTotalMusicVotes', data))
+        .then(data => {
+          commit('fetchTotalMusicVotes', data)
+        })
     },
     upVoteMusicVote({commit}, musicId){
 
-      commit('upVoteMusicVote', musicId['musicId'] - 1)
+      commit('upVoteMusicVote', musicId['musicId'])
 
       fetch('https://localhost:5001/api/musictotalvote', {
         method: 'PUT',
@@ -57,7 +77,7 @@ export default createStore({
 
     },
     downVoteMusicVote({commit}, musicId){
-      commit('downVoteMusicVote', musicId['musicId'] -1)
+      commit('downVoteMusicVote', musicId['musicId'])
 
       fetch('https://localhost:5001/api/musictotalvote', {
         method: 'PUT',

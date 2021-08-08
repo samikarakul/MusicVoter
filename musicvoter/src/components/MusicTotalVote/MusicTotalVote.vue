@@ -1,6 +1,7 @@
 <template>
 <div>
-    <p class="musicTotalVote"> {{ $store.state.musicTotalVotes[musicId-1].totalVote }}</p>
+    <p class="musicTotalVote"> {{ totalVote }}</p>
+
 </div>
 </template>
 
@@ -11,7 +12,7 @@ export default {
             tmpId: 1
         }
     },
-    props: ['musicId'],
+    props: ['musicId', 'totalVote']
 }
 </script>
 

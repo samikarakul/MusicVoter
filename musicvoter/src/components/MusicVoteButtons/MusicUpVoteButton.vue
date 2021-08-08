@@ -25,7 +25,6 @@ export default {
     padding: 0;
     border: none;
     margin-top: -10px;
-    /* margin-right: -50px; */
     background-repeat: no-repeat !important;
     background-size: 35px 35px !important;
 }
